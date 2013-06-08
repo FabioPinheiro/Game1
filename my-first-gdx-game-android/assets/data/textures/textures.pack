@@ -51,3 +51,17 @@ bob-06
   orig: 24, 28
   offset: 0, 0
   index: -1
+bob-up
+  rotate: false
+  xy: 103, 31
+  size: 24, 28
+  orig: 24, 28
+  offset: 0, 0
+  index: -1
+bob-down
+  rotate: false
+  xy: 103, 1
+  size: 24, 28
+  orig: 24, 28
+  offset: 0, 0
+  index: -1

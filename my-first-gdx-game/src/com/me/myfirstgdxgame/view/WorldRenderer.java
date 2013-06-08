@@ -8,6 +8,7 @@ import com.me.myfirstgdxgame.model.World;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color; //import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -35,8 +36,12 @@ public class WorldRenderer {
 	/** Textures **/
 	private TextureRegion bobIdleLeft;
 	private TextureRegion bobIdleRight;
-	private TextureRegion blockTexture;
+	private Texture blockTexture;
 	private TextureRegion bobFrame;
+	private TextureRegion bobJumpLeft;
+	private TextureRegion bobFallLeft;
+	private TextureRegion bobJumpRight;
+	private TextureRegion bobFallRight;
 	
 	/** Animations **/
 	private Animation walkLeftAnimation;
@@ -67,12 +72,20 @@ public class WorldRenderer {
 	
 	private void loadTextures() {
 		//bobTexture = new  Texture(Gdx.files.internal("data/textures/Mushroom_Block.png"));
-		//blockTexture = new Texture(Gdx.files.internal("data/textures/Brick_Block.png"));
+		blockTexture = new Texture(Gdx.files.internal("data/textures/Brick_Block.png"));
 		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("data/textures/textures.pack"));
 		bobIdleLeft = atlas.findRegion("bob-01");
 		bobIdleRight = new TextureRegion(bobIdleLeft);
 		bobIdleRight.flip(true, false);
-		blockTexture = atlas.findRegion("block");
+		//blockTexture = atlas.findRegion("block");
+		
+		bobJumpLeft = atlas.findRegion("bob-up");
+		bobJumpRight = new TextureRegion(bobJumpLeft);
+		bobJumpRight.flip(true, false);
+		bobFallLeft = atlas.findRegion("bob-down");
+		bobFallRight = new TextureRegion(bobFallLeft);
+		bobFallRight.flip(true, false);
+		
 		TextureRegion[] walkLeftFrames = new TextureRegion[5];
 		for (int i = 0; i < 5; i++) {
 			walkLeftFrames[i] = atlas.findRegion("bob-0" + (i + 2));
@@ -108,6 +121,12 @@ public class WorldRenderer {
 		bobFrame = bob.isFacingLeft() ? bobIdleLeft : bobIdleRight;
 		if(bob.getState().equals(State.WALKING)) {
 			bobFrame = bob.isFacingLeft() ? walkLeftAnimation.getKeyFrame(bob.getStateTime(), true) : walkRightAnimation.getKeyFrame(bob.getStateTime(), true);
+		} else if (bob.getState().equals(State.JUMPING)) {
+			if (bob.getVelocity().y > 0) {
+				bobFrame = bob.isFacingLeft() ? bobJumpLeft : bobJumpRight;
+			} else {
+				bobFrame = bob.isFacingLeft() ? bobFallLeft : bobFallRight;
+			}
 		}
 		spriteBatch.draw(bobFrame, bob.getPosition().x * ppuX, bob.getPosition().y * ppuY, Bob.SIZE * ppuX, Bob.SIZE * ppuY);
 	}
