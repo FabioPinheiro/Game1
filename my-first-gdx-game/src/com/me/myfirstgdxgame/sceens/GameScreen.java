@@ -1,6 +1,6 @@
 package com.me.myfirstgdxgame.sceens;
 
-import com.me.myfirstgdxgame.controller.WorldController;
+import com.me.myfirstgdxgame.controller.BobController;
 import com.me.myfirstgdxgame.model.World;
 import com.me.myfirstgdxgame.view.WorldRenderer;
 
@@ -15,7 +15,7 @@ public class GameScreen implements Screen, InputProcessor {
 
 	private World world;
 	private WorldRenderer renderer;
-	private WorldController controller;
+	private BobController controller;
 	
 	private int width, height; // the width and height of the screen used by the Android touch events.
 	
@@ -23,7 +23,7 @@ public class GameScreen implements Screen, InputProcessor {
 	public void show(){
 		world = new World();
 		renderer = new WorldRenderer(world, false);
-		controller = new WorldController(world);
+		controller = new BobController(world);
 		Gdx.input.setInputProcessor(this);
 	}
 	

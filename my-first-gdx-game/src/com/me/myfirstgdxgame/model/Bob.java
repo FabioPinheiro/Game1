@@ -35,6 +35,9 @@ public class Bob {
 	public void setFacingLeft(boolean facingLeft) {
 		this.facingLeft = facingLeft;
 	}
+	public void setPosition(Vector2 position) {
+		this.position = position;
+	}
 
 	public Vector2 getPosition() {
 		return position;
