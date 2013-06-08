@@ -1,4 +1,4 @@
-package com.me.myfirstgdxgame;
+package com.me.myfirstgdxgame.model;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;

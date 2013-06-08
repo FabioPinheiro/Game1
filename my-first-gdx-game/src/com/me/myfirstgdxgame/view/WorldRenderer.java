@@ -1,8 +1,8 @@
-package com.me.myfirstgdxgame;
+package com.me.myfirstgdxgame.view;
 
-import com.me.myfirstgdxgame.Block;
-import com.me.myfirstgdxgame.Bob;
-import com.me.myfirstgdxgame.World;
+import com.me.myfirstgdxgame.model.Block;
+import com.me.myfirstgdxgame.model.Bob;
+import com.me.myfirstgdxgame.model.World;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color; //import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -40,7 +40,7 @@ public class WorldRenderer {
 	ppuY = (float)height / CAMERA_HEIGHT;
 	}
 
-	public WorldRenderer(World world) {
+	public WorldRenderer(World world, boolean dedug) {
 		this.world = world;
 		this.cam = new OrthographicCamera(10, 7);
 		this.cam.position.set(5, 3.5f, 0);

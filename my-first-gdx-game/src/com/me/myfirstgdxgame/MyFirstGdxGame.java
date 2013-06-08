@@ -1,7 +1,7 @@
 package com.me.myfirstgdxgame;
 
 
-import com.me.myfirstgdxgame.Sceen.GameScreen;
+import com.me.myfirstgdxgame.sceens.GameScreen;
 
 import com.badlogic.gdx.Game;
 

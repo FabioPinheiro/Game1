@@ -1,10 +1,10 @@
-package com.me.myfirstgdxgame;
+package com.me.myfirstgdxgame.model;
 
 import com.badlogic.gdx.math.*;
 
 public class Block {
 
-	static final float SIZE = 1f;
+	public static final float SIZE = 1f;
 	
 	Vector2 	position = new Vector2();
 	Rectangle 	bounds = new Rectangle();
