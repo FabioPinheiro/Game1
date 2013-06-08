@@ -2,12 +2,16 @@ package com.me.myfirstgdxgame.view;
 
 import com.me.myfirstgdxgame.model.Block;
 import com.me.myfirstgdxgame.model.Bob;
+import com.me.myfirstgdxgame.model.Bob.State;
 import com.me.myfirstgdxgame.model.World;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color; //import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
@@ -16,6 +20,7 @@ public class WorldRenderer {
 	
 	private static final float CAMERA_WIDTH = 10f;
 	private static final float CAMERA_HEIGHT = 7f;
+	private static final float RUNNING_FRAME_DURATION = 0.06f;
 
 	private World world;
 	private OrthographicCamera cam;
@@ -24,8 +29,18 @@ public class WorldRenderer {
 	ShapeRenderer debugRenderer = new ShapeRenderer();
 
 	/** Textures **/
-	private Texture bobTexture;
-	private Texture blockTexture;
+	//private Texture bobTexture;
+	//private Texture blockTexture;
+	
+	/** Textures **/
+	private TextureRegion bobIdleLeft;
+	private TextureRegion bobIdleRight;
+	private TextureRegion blockTexture;
+	private TextureRegion bobFrame;
+	
+	/** Animations **/
+	private Animation walkLeftAnimation;
+	private Animation walkRightAnimation;
 	
 	private SpriteBatch spriteBatch;
 	private boolean debug = false;
@@ -34,16 +49,16 @@ public class WorldRenderer {
 	private float ppuX; // pixels per unit on the X axis
 	private float ppuY; // pixels per unit on the Y axis
 	public void setSize (int w, int h) {
-	this.width = w;
-	this.height = h;
-	ppuX = (float)width / CAMERA_WIDTH;
-	ppuY = (float)height / CAMERA_HEIGHT;
+		this.width = w;
+		this.height = h;
+		ppuX = (float)width / CAMERA_WIDTH;
+		ppuY = (float)height / CAMERA_HEIGHT;
 	}
 
 	public WorldRenderer(World world, boolean dedug) {
 		this.world = world;
-		this.cam = new OrthographicCamera(10, 7);
-		this.cam.position.set(5, 3.5f, 0);
+		this.cam = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
+		this.cam.position.set(CAMERA_WIDTH / 2f, CAMERA_HEIGHT / 2f, 0);
 		this.cam.update();
 		this.debug = debug;
 		spriteBatch = new SpriteBatch();
@@ -51,8 +66,26 @@ public class WorldRenderer {
 	}
 	
 	private void loadTextures() {
-		bobTexture = new  Texture(Gdx.files.internal("data/textures/Mushroom_Block.png"));
-		blockTexture = new Texture(Gdx.files.internal("data/textures/Brick_Block.png"));
+		//bobTexture = new  Texture(Gdx.files.internal("data/textures/Mushroom_Block.png"));
+		//blockTexture = new Texture(Gdx.files.internal("data/textures/Brick_Block.png"));
+		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("data/textures/textures.pack"));
+		bobIdleLeft = atlas.findRegion("bob-01");
+		bobIdleRight = new TextureRegion(bobIdleLeft);
+		bobIdleRight.flip(true, false);
+		blockTexture = atlas.findRegion("block");
+		TextureRegion[] walkLeftFrames = new TextureRegion[5];
+		for (int i = 0; i < 5; i++) {
+			walkLeftFrames[i] = atlas.findRegion("bob-0" + (i + 2));
+		}
+		walkLeftAnimation = new Animation(RUNNING_FRAME_DURATION, walkLeftFrames);
+
+		TextureRegion[] walkRightFrames = new TextureRegion[5];
+
+		for (int i = 0; i < 5; i++) {
+			walkRightFrames[i] = new TextureRegion(walkLeftFrames[i]);
+			walkRightFrames[i].flip(true, false);
+		}
+		walkRightAnimation = new Animation(RUNNING_FRAME_DURATION, walkRightFrames);
 	}
 
 	public void render() {
@@ -72,7 +105,11 @@ public class WorldRenderer {
 
 	private void drawBob() {
 		Bob bob = world.getBob();
-		spriteBatch.draw(bobTexture, bob.getPosition().x * ppuX, bob.getPosition().y * ppuY, Bob.SIZE * ppuX, Bob.SIZE * ppuY);
+		bobFrame = bob.isFacingLeft() ? bobIdleLeft : bobIdleRight;
+		if(bob.getState().equals(State.WALKING)) {
+			bobFrame = bob.isFacingLeft() ? walkLeftAnimation.getKeyFrame(bob.getStateTime(), true) : walkRightAnimation.getKeyFrame(bob.getStateTime(), true);
+		}
+		spriteBatch.draw(bobFrame, bob.getPosition().x * ppuX, bob.getPosition().y * ppuY, Bob.SIZE * ppuX, Bob.SIZE * ppuY);
 	}
 
 	private void drawDebug() {
