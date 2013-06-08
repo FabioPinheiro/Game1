@@ -1,5 +1,20 @@
 package com.me.myfirstgdxgame;
 
+
+import com.me.myfirstgdxgame.Sceen.GameScreen;
+
+import com.badlogic.gdx.Game;
+
+public class MyFirstGdxGame extends Game {
+
+	@Override
+	public void create() {
+		setScreen(new GameScreen());
+	}
+	
+}
+
+/*
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
@@ -41,11 +56,12 @@ public class MyFirstGdxGame implements ApplicationListener {
 		texture.dispose();
 	}
 
+	
 	@Override
-	public void render() {		
+	public void render() {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		
+
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		sprite.draw(batch);
@@ -63,4 +79,4 @@ public class MyFirstGdxGame implements ApplicationListener {
 	@Override
 	public void resume() {
 	}
-}
+}*/
