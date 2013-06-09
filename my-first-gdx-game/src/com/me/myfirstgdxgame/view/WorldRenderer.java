@@ -28,10 +28,6 @@ public class WorldRenderer {
 
 	/** for debug rendering **/
 	ShapeRenderer debugRenderer = new ShapeRenderer();
-
-	/** Textures **/
-	//private Texture bobTexture;
-	//private Texture blockTexture;
 	
 	/** Textures **/
 	private TextureRegion bobIdleLeft;
@@ -106,12 +102,13 @@ public class WorldRenderer {
 			drawBlocks();
 			drawBob();
 		spriteBatch.end();
+		drawCollisionBlocks();
 		if (debug)
 			drawDebug();
 	}
 
 	private void drawBlocks() {
-		for (Block block : world.getBlocks()) {
+		for (Block block : world.getDrawableBlocks((int)CAMERA_WIDTH, (int)CAMERA_HEIGHT)) {
 			spriteBatch.draw(blockTexture, block.getPosition().x * ppuX, block.getPosition().y * ppuY, Block.SIZE * ppuX, Block.SIZE * ppuY);
 		}
 	}
@@ -135,7 +132,7 @@ public class WorldRenderer {
 		// render blocks
 		debugRenderer.setProjectionMatrix(cam.combined);
 		debugRenderer.begin(ShapeType.Line);
-		for (Block block : world.getBlocks()) {
+		for (Block block : world.getDrawableBlocks((int)CAMERA_WIDTH, (int)CAMERA_HEIGHT)) {
 			Rectangle rect = block.getBounds();
 			float x1 = block.getPosition().x + rect.x;
 			float y1 = block.getPosition().y + rect.y;
@@ -149,6 +146,16 @@ public class WorldRenderer {
 		float y1 = bob.getPosition().y + rect.y;
 		debugRenderer.setColor(new Color(0, 1, 0, 1));
 		debugRenderer.rect(x1, y1, rect.width, rect.height);
+		debugRenderer.end();
+	}
+	
+	private void drawCollisionBlocks() {
+		debugRenderer.setProjectionMatrix(cam.combined);
+		debugRenderer.begin(ShapeType.FilledRectangle);
+		debugRenderer.setColor(new Color(1, 1, 1, 1));
+		for (Rectangle rect : world.getCollisionRects()) {
+			debugRenderer.filledRect(rect.x, rect.y, rect.width, rect.height);
+		}
 		debugRenderer.end();
 	}
 }
